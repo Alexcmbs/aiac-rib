@@ -1,0 +1,53 @@
+LCL
+LE CRÉDIT LYONNAIS
+RELEVÉ D'IDENTITÉ BANCAIRE
+
+Titulaire du compte
+
+MONSIEUR PHILIPPE CACHOT
+DOMAINE DU GOLF DE MASSANE
+2 ALLEE SYRAH
+34670 BAILLARGUES
+
+Identification nationale de compte bancaire - RIB
+
+=== TABLEAU ===
+code bancaire | indicatif | numéro de compte | clé RIB
+30002 | 03050 | 0000005828K | 20
+domiciliation | CL PEROLS 03050 | | 
+
+Identification internationale de compte bancaire - IBAN
+
+=== TABLEAU ===
+Identification internationale de compte bancaire - IBAN | | | | | |
+FR86 | 3000 | 2030 | 5000 | 0000 | 5828 | K20
+identifiant international banque - BIC (adresse SWIFT) | CRLYFRPP | | | | |
+
+CORFILM0 10-2018
+
+LCL
+LE CRÉDIT LYONNAIS
+RELEVÉ D'IDENTITÉ BANCAIRE
+
+Titulaire du compte
+
+MONSIEUR PHILIPPE CACHOT
+DOMAINE DU GOLF DE MASSANE
+2 ALLEE SYRAH
+34670 BAILLARGUES
+
+Identification nationale de compte bancaire - RIB
+
+=== TABLEAU ===
+code bancaire | indicatif | numéro de compte | clé RIB
+30002 | 03050 | 0000005828K | 20
+domiciliation | CL PEROLS 03050 | | 
+
+Identification internationale de compte bancaire - IBAN
+
+=== TABLEAU ===
+Identification internationale de compte bancaire - IBAN | | | | | |
+FR86 | 3000 | 2030 | 5000 | 0000 | 5828 | K20
+identifiant international banque - BIC (adresse SWIFT) | CRLYFRPP | | | | |
+
+CORFILM0 10-2018

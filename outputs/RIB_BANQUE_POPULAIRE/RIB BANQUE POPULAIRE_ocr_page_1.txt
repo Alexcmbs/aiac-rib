@@ -1,0 +1,39 @@
+Relevé d'Identité Bancaire / International Bank Account Number
+
+Titulaire du compte / Account holder : SARL AUTOMOBILES SAINT LAURENT                            Partie réservée au destinataire du relevé
+Adresse / Address :
+6 AVENUE JEAN MOULIN
+69720 ST LAURENT DE MURE
+
+Domiciliation / Paying bank : BPAURA VENISSIEUX                          ( 00457 )
+RIB :
+
+=== TABLEAU ===
+Code Banque | Code Guichet | Numéro de Compte | Clé RIB
+16807 | 00400 | 80197352605 | 34
+
+IBAN / International Bank Account Number : FR76 1680 7004 0080 1973 5260 534
+Réf. SWIFT / Bank Identifier Code : CCBPFRPPGRE
+
+Ce relevé est destiné à être remis, sur leur demande, à vos créanciers ou débiteurs, français ou étrangers, appelés à faire inscrire des opérations à votre compte ouvert à la BANQUE POPULAIRE AUVERGNE RHONE ALPES : Virements, paiement de quittances ...
+This statement is intended to be delivered, to those of your creditors or debtors who have transactions posted to your account open in the BANQUE POPULAIRE AUVERGNE RHONE ALPES : Credit transfers, invoice payments ...
+
+Relevé d'Identité Bancaire / International Bank Account Number
+
+Titulaire du compte / Account holder : SARL AUTOMOBILES SAINT LAURENT                            Partie réservée au destinataire du relevé
+Adresse / Address :
+6 AVENUE JEAN MOULIN
+69720 ST LAURENT DE MURE
+
+Domiciliation / Paying bank : BPAURA VENISSIEUX                          ( 00457 )
+RIB :
+
+=== TABLEAU ===
+Code Banque | Code Guichet | Numéro de Compte | Clé RIB
+16807 | 00400 | 80197352605 | 34
+
+IBAN / International Bank Account Number : FR76 1680 7004 0080 1973 5260 534
+Réf. SWIFT / Bank Identifier Code : CCBPFRPPGRE
+
+Ce relevé est destiné à être remis, sur leur demande, à vos créanciers ou débiteurs, français ou étrangers, appelés à faire inscrire des opérations à votre compte ouvert à la BANQUE POPULAIRE AUVERGNE RHONE ALPES : Virements, paiement de quittances ...
+This statement is intended to be delivered, to those of your creditors or debtors who have transactions posted to your account open in the BANQUE POPULAIRE AUVERGNE RHONE ALPES : Credit transfers, invoice payments ...

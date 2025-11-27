@@ -1,0 +1,24 @@
+{
+  "pdf": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BANQUE_POPULAIRE/original_RIB BANQUE POPULAIRE.pdf",
+  "steps": [
+    {
+      "name": "ocr_pages_text",
+      "ok": true,
+      "duration_sec": 41.18436813354492,
+      "output_paths": {
+        "txt_dir": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BANQUE_POPULAIRE",
+        "merged_txt": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BANQUE_POPULAIRE/RIB BANQUE POPULAIRE_ocr_all_pages.txt"
+      },
+      "error": null
+    },
+    {
+      "name": "text_to_json_rib",
+      "ok": true,
+      "duration_sec": 12.070117712020874,
+      "output_paths": {
+        "merged_json": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BANQUE_POPULAIRE/RIB BANQUE POPULAIRE_merged_all_pages.json"
+      },
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "iban": "FR7616807004008019735260534",
+    "bic": "CCBPFRPPGRE",
+    "titulaire": "SARL AUTOMOBILES SAINT LAURENT",
+    "cdBanque": "16807",
+    "nomBanque": "BANQUE POPULAIRE AUVERGNE RHONE ALPES",
+    "sens": "virement"
+  }
+]

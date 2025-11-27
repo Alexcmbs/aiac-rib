@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "iban": "FR7630004018710001012608436",
+    "bic": "BNPAFRPPXXX",
+    "titulaire": "BRIE POIDS LOURDS",
+    "cdBanque": "30004",
+    "nomBanque": "BNP PARIBAS CRETEIL VILLAGE",
+    "sens": "virement"
+  }
+]

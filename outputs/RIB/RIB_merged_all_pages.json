@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "iban": "FR8630002030500000005828K20",
+    "bic": "CRLYFRPP",
+    "titulaire": "MONSIEUR PHILIPPE CACHOT",
+    "cdBanque": "30002",
+    "nomBanque": "LE CRÉDIT LYONNAIS",
+    "sens": "virement"
+  },
+  {
+    "id": 2,
+    "iban": "FR8630002030500000005828K20",
+    "bic": "CRLYFRPP",
+    "titulaire": "MONSIEUR PHILIPPE CACHOT",
+    "cdBanque": "30002",
+    "nomBanque": "LE CRÉDIT LYONNAIS",
+    "sens": "virement"
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "pdf": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BNP/original_RIB BNP.pdf",
+  "steps": [
+    {
+      "name": "ocr_pages_text",
+      "ok": true,
+      "duration_sec": 25.255021810531616,
+      "output_paths": {
+        "txt_dir": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BNP",
+        "merged_txt": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BNP/RIB BNP_ocr_all_pages.txt"
+      },
+      "error": null
+    },
+    {
+      "name": "text_to_json_rib",
+      "ok": true,
+      "duration_sec": 15.361254215240479,
+      "output_paths": {
+        "merged_json": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_BNP/RIB BNP_merged_all_pages.json"
+      },
+      "error": null
+    }
+  ]
+}
