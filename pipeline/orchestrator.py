@@ -1,9 +1,16 @@
 import asyncio
+import json
 import time
-from pathlib import Path
 from typing import Optional
 
 from .config import load_config
+from .id_mail_json import _azure_text_to_json, _get_azure_client
+from .mail_service import (
+    MailProcessContext,
+    download_last_mail_attachment,
+    update_mail_rib_document_with_agent_output,
+    update_mail_rib_document_with_ids,
+)
 from .json_service import AzureTextToJsonService
 from .ocr_service import AzureOCRService
 from .storage import prepare_paths, write_errors, write_status
@@ -105,5 +112,51 @@ async def run_pdf_pipeline(pdf_path: str, cfg: Optional[ProcessConfig] = None) -
         process_dir=str(paths.process_dir),
         steps=steps,
     )
+
+
+async def run_latest_mail_attachment_pipeline(cfg: Optional[ProcessConfig] = None) -> ProcessReport:
+    """
+    Pipeline étendue:
+    0. Récupération du dernier mail reçu sur MAILBOX et téléchargement de sa pièce jointe.
+    1. OCR des pages PDF en texte brut.
+    2. Agrégation du texte et appel Azure texte→JSON pour extraire les champs RIB.
+
+    Cette fonction ajoute donc deux étapes "en amont" :
+    - Récupération du mail
+    - Téléchargement et stockage local de la pièce jointe
+    puis délègue à `run_pdf_pipeline` pour la suite.
+    """
+    cfg = cfg or load_config()
+
+    # On stocke la pièce jointe brute dans un sous-dossier dédié des sorties de la pipeline.
+    mail_out_dir = cfg.out_root / "mail_attachments"
+    ctx: MailProcessContext = download_last_mail_attachment(mail_out_dir)
+
+    # Extraction de l'identifiant client / contrat à partir du texte du mail
+    client = _get_azure_client()
+    ids = _azure_text_to_json(client, ctx.mail_text)
+    update_mail_rib_document_with_ids(ctx.process_name, ids)
+
+    # Ensuite, on exécute la pipeline standard sur cette pièce jointe (OCR + agent RIB).
+    report = await run_pdf_pipeline(str(ctx.attachment_path), cfg)
+
+    # On récupère le chemin du JSON fusionné produit par l'agent RIB.
+    merged_json_path: Optional[str] = None
+    for step in report.steps:
+        if step.name == "text_to_json_rib" and step.ok:
+            merged_json_path = step.output_paths.get("merged_json")
+            if merged_json_path:
+                break
+
+    if merged_json_path:
+        try:
+            with open(merged_json_path, "r", encoding="utf-8") as f:
+                agent_json = json.load(f)
+            update_mail_rib_document_with_agent_output(ctx.process_name, agent_json)
+        except Exception:
+            # On ne fait pas échouer tout le pipeline si l'écriture Firebase échoue.
+            pass
+
+    return report
 
 

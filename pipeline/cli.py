@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 from .config import load_config
-from .orchestrator import run_pdf_pipeline
+from .orchestrator import run_latest_mail_attachment_pipeline, run_pdf_pipeline
 
 try:
     # Chargement automatique du fichier .env s'il existe
@@ -34,11 +34,16 @@ def main() -> None:
             # On ignore silencieusement si le chargement échoue
             pass
 
-    parser = argparse.ArgumentParser(description="Pipeline: PDF/Images → TXT/JSON (OCR Azure)")
+    parser = argparse.ArgumentParser(description="Pipeline: PDF/Images → TXT/JSON (OCR Azure) ou depuis le dernier mail.")
     parser.add_argument(
         "--input",
-        required=True,
-        help="Dossier d'entrée contenant des PDF ou des images (JPG/PNG)",
+        required=False,
+        help="Dossier d'entrée contenant des PDF ou des images (JPG/PNG). Ignoré si --from-mail est utilisé.",
+    )
+    parser.add_argument(
+        "--from-mail",
+        action="store_true",
+        help="Traite la dernière pièce jointe RIB reçue par mail (pipeline mail + OCR + agent).",
     )
     parser.add_argument("--out-root", required=False, help="Dossier racine de sortie (défaut: uploads)")
     parser.add_argument("--ocr-backend", required=False, default="azure", help="Backend OCR (par défaut: azure)")
@@ -54,6 +59,24 @@ def main() -> None:
         dpi=args.dpi,
         skip_existing=args.skip_existing,
     )
+    # Mode 1 : traitement depuis le dernier mail (pipeline complète mail + RIB)
+    if args.from_mail:
+        try:
+            print("▶️ Lancement de la pipeline depuis le dernier mail (création doc Firebase, lecture mail, OCR, agent RIB)...")
+            report = asyncio.run(run_latest_mail_attachment_pipeline(cfg))
+            print(f"✅ Pipeline mail+RIB terminée. Dossier de process: {report.process_dir}")
+        except KeyboardInterrupt:
+            print("Interrompu par l'utilisateur.")
+            sys.exit(130)
+        except Exception as e:
+            print(f"❌ Échec pipeline mail+RIB → {e}")
+            sys.exit(1)
+        return
+
+    # Mode 2 : traitement classique d'un dossier de PDF/Images
+    if not args.input:
+        print("Erreur: --input est obligatoire sauf si vous utilisez --from-mail.")
+        sys.exit(1)
 
     docs = find_documents(args.input)
     if not docs:

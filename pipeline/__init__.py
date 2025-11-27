@@ -16,6 +16,7 @@ __all__ = [
     "ocr_service",
     "writer",
     "orchestrator",
+    "mail_service",
 ]
 
 

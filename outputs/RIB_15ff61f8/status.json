@@ -1,0 +1,24 @@
+{
+  "pdf": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_15ff61f8/original_RIB.jpg",
+  "steps": [
+    {
+      "name": "ocr_pages_text",
+      "ok": true,
+      "duration_sec": 50.67172718048096,
+      "output_paths": {
+        "txt_dir": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_15ff61f8",
+        "merged_txt": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_15ff61f8/RIB_ocr_all_pages.txt"
+      },
+      "error": null
+    },
+    {
+      "name": "text_to_json_rib",
+      "ok": true,
+      "duration_sec": 14.022221088409424,
+      "output_paths": {
+        "merged_json": "/Users/alexandrecombes/Desktop/Foaster/aiac-rib/outputs/RIB_15ff61f8/RIB_merged_all_pages.json"
+      },
+      "error": null
+    }
+  ]
+}

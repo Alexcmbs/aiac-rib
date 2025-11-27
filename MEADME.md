@@ -1,0 +1,1 @@
+cmd python -m pipeline.cli --from-mail --out-root ./outputs
