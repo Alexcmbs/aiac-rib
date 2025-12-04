@@ -1,3 +1,4 @@
+import numbers
 import os
 import logging
 from pathlib import Path
@@ -252,6 +253,50 @@ def get_person_by_id(person_id: str):
     return data
 
 
+def update_person(person_id: str, person_data: dict):
+    """
+    Appelle PUT /personne/{id} pour modifier une personne existante.
+    On doit renvoyer l'intégralité du payload de la personne.
+    """
+    url = f"{BASE_URL}/personne/{person_id}"
+    headers = get_headers()
+    logger.debug("Appel à PUT /personne/{id} : url=%s", url)
+    logger.debug("Payload personne (mise à jour) : %s", person_data)
+
+    resp = session.put(url, json=person_data, headers=headers, timeout=10)
+    logger.debug(
+        "Réponse brute PUT personne - status=%s, body=%s",
+        resp.status_code,
+        resp.text,
+    )
+
+    if resp.status_code == 401:
+        logger.warning(
+            "Token expiré (401) lors de PUT /personne/%s. On relance un login puis on retente.",
+            person_id,
+        )
+        login_and_get_token()
+        headers = get_headers()
+        resp = session.put(url, json=person_data, headers=headers, timeout=10)
+        logger.debug(
+            "Réponse PUT /personne/%s après renouvellement de token - status=%s, body=%s",
+            person_id,
+            resp.status_code,
+            resp.text,
+        )
+
+    resp.raise_for_status()
+
+    try:
+        data = resp.json()
+    except ValueError:
+        logger.error("Réponse PUT /personne/%s non JSON, contenu : %s", person_id, resp.text)
+        raise
+
+    logger.info("Mise à jour personne réussie, réponse JSON : %s", data)
+    return data
+
+
 # Exemple d'appels enchaînés :
 # 1. Création d'une personne via POST /personne
 # 2. Récupération de l'id via le boBy WS_EXT_FOASTER_CHERID_PER (si possible)
@@ -322,17 +367,18 @@ if __name__ == "__main__":
 
 
     logger.info("=== Étape 1 : création de la personne via POST /personne ===")
-    creation_response = create_person(person_payload)
+    # creation_response = create_person(person_payload)
 
-    logger.info("Réponse création personne : %s", creation_response)
+    # logger.info("Réponse création personne : %s", creation_response)
 
     # On essaie de récupérer un numéro de personne renvoyé par l'API
-    numper = (
-        creation_response.get("numper")
-        or creation_response.get("NUMPER")
-        or creation_response.get("numPer")
-        or creation_response.get("num")
-    )
+    # numper = (
+    #     creation_response.get("numper")
+    #     or creation_response.get("NUMPER")
+    #     or creation_response.get("numPer")
+    #     or creation_response.get("num")
+    # )
+    numper='ASS966'
     logger.info("Numéro de personne récupéré après création : %s", numper)
 
     person_id = None
@@ -353,6 +399,7 @@ if __name__ == "__main__":
                     first_bean.get("id")
                     or first_bean.get("idPer")
                     or first_bean.get("id_personne")
+                    or first_bean.get("ID_PER")
                 )
                 logger.info("Identifiant de personne extrait depuis le boBy : %s", person_id)
             else:
@@ -372,9 +419,88 @@ if __name__ == "__main__":
         logger.info("=== Étape 3 : récupération des infos de la personne via GET /personne/{id} ===")
         person_details = get_person_by_id(str(person_id))
         logger.info("Détails de la personne récupérés : %s", person_details)
+
+        # Étape 4a : test PUT avec le payload IDENTIQUE à celui du GET
+        if not isinstance(person_details, dict):
+            logger.warning(
+                "Détails de la personne inattendus (non dict JSON), PUT /personne/{id} ignoré."
+            )
+        else:
+            logger.info("=== Étape 4a : PUT /personne/{id} avec le payload EXACT du GET ===")
+            put_identique_ok = True
+            try:
+                same_payload_response = update_person(str(person_id), person_details)
+                logger.info(
+                    "Réponse PUT (payload identique au GET) : %s", same_payload_response
+                )
+            except requests.exceptions.HTTPError as e:
+                logger.error(
+                    "PUT /personne/{id} avec payload identique au GET a échoué : %s",
+                    e,
+                )
+                # On s'arrête là pour le diagnostic, on ne tente pas de modifier rib/ribs
+                put_identique_ok = False
+
+            if put_identique_ok:
+                # Étape 4b : test de mise à jour de rib / ribs uniquement si le PUT identique passe
+                # On repart du payload complet renvoyé par l'API
+                updated_person = dict(person_details)
+
+                # On part de la structure EXACTE renvoyée par l'API pour rib / ribs
+                api_rib = person_details.get("rib") or {}
+                api_ribs = person_details.get("ribs") or []
+
+                logger.debug("rib renvoyé par l'API avant modification : %s", api_rib)
+                logger.debug("ribs renvoyés par l'API avant modification : %s", api_ribs)
+
+                # On clone le rib API et on ne modifie que les champs demandés,
+                # pour garder exactement les mêmes "colonnes" côté serveur.
+                new_rib = dict(api_rib)
+                new_rib.update(
+                    {
+                        "id": "11006200",
+                        "iban": "FR7630003038580005025916860",
+                        "bic": "SOGEFRPP",
+                        "sens": "2",
+                        "cdBanque": None,
+                        "nomBanque": "SG",
+                        "titulaire": "ALEXANDRE COMBES",
+                        "dtInactif": None,
+                        "idPer": None,
+                        "currencyCode": None,
+                        "dtCreation": "04/12/2025",
+                    }
+                )
+
+                # Mise à jour de rib
+                updated_person["rib"] = new_rib
+
+                # Mise à jour de ribs : on prend la même structure tableau que l'API,
+                # en remplaçant la première entrée par new_rib (et en gardant les autres si elles existent)
+                new_ribs = []
+                if api_ribs:
+                    # On remplace seulement le premier élément pour limiter les risques
+                    first = dict(api_ribs[0])
+                    first.update(new_rib)
+                    new_ribs.append(first)
+                    # On garde les autres tels quels
+                    if len(api_ribs) > 1:
+                        new_ribs.extend(api_ribs[1:])
+                else:
+                    # Pas de tableau à l'origine : on en crée un avec new_rib
+                    new_ribs = [new_rib]
+
+                updated_person["ribs"] = new_ribs
+
+                logger.debug("rib après modification : %s", updated_person.get("rib"))
+                logger.debug("ribs après modification : %s", updated_person.get("ribs"))
+
+                logger.info("=== Étape 4b : mise à jour de la personne via PUT /personne/{id} avec rib/ribs modifiés ===")
+                update_response = update_person(str(person_id), updated_person)
+                logger.info("Réponse mise à jour personne : %s", update_response)
     else:
         logger.warning(
-            "Aucun id de personne déterminé, l'appel GET /personne/{id} est ignoré."
+            "Aucun id de personne déterminé, les appels GET /personne/{id} et PUT /personne/{id} sont ignorés."
         )
 
 
